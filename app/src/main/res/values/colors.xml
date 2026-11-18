@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tm_blue">#026CDF</color>
+    <color name="tm_blue_dark">#014DA1</color>
+    <color name="tm_blue_pressed">#013A7A</color>
+
+    <color name="tm_background">#121212</color>
+    <color name="tm_surface">#1E1E1E</color>
+
+    <color name="tm_text_primary">#FFFFFF</color>
+    <color name="tm_text_secondary">#A0A0A0</color>
+    <color name="tm_text_hint">#6E6E6E</color>
+
+    <color name="tm_outline">#333333</color>
+    <color name="tm_error">#CF6679</color>
+</resources>

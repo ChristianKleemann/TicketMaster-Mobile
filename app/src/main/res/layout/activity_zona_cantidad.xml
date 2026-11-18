@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/tm_background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarZonas"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/tm_surface"
+        android:theme="@style/ThemeOverlay.Material3.Dark.ActionBar"
+        app:title="@string/zonas_title" />
+
+    <TextView
+        android:id="@+id/tvZonaEvento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp"
+        android:textColor="@color/tm_text_primary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="La Traviata — mié 7 oct 2026, 20:00 hrs" />
+
+    <TextView
+        android:id="@+id/tvZonaLimite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/tm_text_secondary"
+        android:textSize="13sp"
+        tools:text="Máximo 10 boletos por usuario" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvZonas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/tm_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvZonaTotal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/tm_text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="2 boletos · Total: $5,600.00" />
+
+        <Button
+            android:id="@+id/btnZonaContinuar"
+            style="@style/Widget.TicketMaster.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="@string/btn_continuar_pago" />
+    </LinearLayout>
+</LinearLayout>

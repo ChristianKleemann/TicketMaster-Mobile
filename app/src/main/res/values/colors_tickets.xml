@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Estados de asiento en la cuadrícula de selección -->
+    <color name="seat_disponible">#2E7D32</color>
+    <color name="seat_disponible_bg">#1B3A1E</color>
+    <color name="seat_seleccionado">#026CDF</color>
+    <color name="seat_seleccionado_bg">#0C2C52</color>
+    <color name="seat_ocupado">#6E6E6E</color>
+    <color name="seat_ocupado_bg">#2A2A2A</color>
+
+    <color name="tm_card_background">#1E1E1E</color>
+    <color name="tm_success">#2E7D32</color>
+    <color name="tm_white">#FFFFFF</color>
+</resources>

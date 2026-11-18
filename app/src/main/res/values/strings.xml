@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">TicketMaster_Mobile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="iniciar_sesión">Iniciar Sesión</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="usuario">Usuario</string>
+    <string name="tranza_master">Ticket Disaster</string>
+    <string name="completar_registro">Completar Registro</string>
+    <string name="contraseña_8_16_carac_esp_solo_inicio_fin">Contraseña (8-16 carac. Esp. solo inicio/fin)</string>
+    <string name="usuario_4_10_alfanuméricos">Usuario (4-10 alfanuméricos)</string>
+    <string name="crear_una_cuenta">Crear una Cuenta</string>
+    <string name="perfil_de_usuario">Perfil de Usuario</string>
+    <string name="cerrar_sesión">Cerrar Sesión</string>
+
+    <string name="nav_profile_title">Perfil</string>
+    <string name="nav_tickets_title">Tickets</string>
+
+    <!-- Perfil / Historial -->
+    <string name="mis_boletos_title">Mis Boletos / Historial de Compras</string>
+    <string name="sin_compras">Aún no tienes compras registradas.</string>
+
+    <!-- Adquirir Boletos: catálogo -->
+    <string name="tickets_title">Adquirir Boletos</string>
+    <string name="filtro_todos">Todos</string>
+    <string name="filtro_cine">Cine</string>
+    <string name="filtro_teatro">Teatro</string>
+    <string name="filtro_museo">Museo</string>
+    <string name="sin_establecimientos">No hay establecimientos disponibles por ahora.</string>
+
+    <!-- Funciones -->
+    <string name="funciones_title">Funciones disponibles</string>
+    <string name="sin_funciones">Este establecimiento no tiene funciones programadas.</string>
+
+    <!-- Selección de asientos -->
+    <string name="seleccion_asientos_title">Selecciona tus asientos</string>
+    <string name="leyenda_disponible">Disponible</string>
+    <string name="leyenda_seleccionado">Seleccionado</string>
+    <string name="leyenda_ocupado">Ocupado</string>
+    <string name="limite_asientos_aviso">Selecciona tus asientos</string>
+    <string name="btn_continuar_pago">Continuar al pago</string>
+    <string name="total_prefix">Total: </string>
+
+    <!-- Pago -->
+    <string name="pago_title">Método de pago</string>
+    <string name="btn_confirmar_pago">Confirmar pago</string>
+    <string name="pago_exitoso_title">¡Compra exitosa!</string>
+
+    <!-- Teatro / Museo: selección por zona -->
+    <string name="zonas_title">Elige sección y cantidad</string>
+
+    <!-- WhatsApp -->
+    <string name="whatsapp_titulo">Notificaciones por WhatsApp</string>
+    <string name="whatsapp_sin_vincular">Sin vincular: no recibirás tus boletos por WhatsApp.</string>
+    <string name="whatsapp_vincular">Vincular WhatsApp</string>
+    <string name="whatsapp_cambiar">Cambiar número</string>
+    <string name="whatsapp_probar">Probar conexión</string>
+    <string name="whatsapp_dialogo_titulo">Vincular WhatsApp</string>
+    <string name="whatsapp_dialogo_explicacion">Escribe el número de celular donde quieres recibir tus boletos (10 dígitos, o con lada de país).</string>
+    <string name="whatsapp_hint_numero">Número de WhatsApp</string>
+    <string name="whatsapp_guardar">Guardar</string>
+    <string name="whatsapp_guardar_igual">Guardar de todos modos</string>
+    <string name="whatsapp_desvincular">Desvincular</string>
+    <string name="whatsapp_cancelar">Cancelar</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Política de red de PRODUCCIÓN: solo HTTPS (se bloquea todo tráfico en claro) y solo las CA del
+  sistema. Para fijar el certificado de tu servidor WAHA (recomendado), agrega un <domain-config>:
+
+  <domain-config>
+      <domain includeSubdomains="false">waha.tu-dominio.com</domain>
+      <pin-set expiration="2027-12-31">
+          <pin digest="SHA-256">BASE64_DEL_HASH_DE_LA_CLAVE_PUBLICA=</pin>
+          <pin digest="SHA-256">BASE64_DE_UN_PIN_DE_RESPALDO=</pin>
+      </pin-set>
+  </domain-config>
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

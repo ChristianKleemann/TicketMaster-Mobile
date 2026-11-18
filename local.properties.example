@@ -1,0 +1,11 @@
+## Copia este archivo como local.properties (NO se versiona) y completa los valores.
+## Android Studio agrega sdk.dir automáticamente; no lo borres.
+
+# URL base de WAHA. En producción debe ser https://
+waha.baseUrl=https://waha.tu-dominio.com
+# Misma clave que WAHA_API_KEY del contenedor de WAHA
+waha.apiKey=CAMBIA_ESTA_CLAVE
+# Nombre de la sesión de WhatsApp en WAHA (por defecto "default")
+waha.session=default
+# DM de destino: número con lada de país, p. ej. 5213312345678 (acepta +52 33 1234 5678)
+waha.chatDestino=5213312345678

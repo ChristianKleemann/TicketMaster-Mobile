@@ -1,0 +1,932 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 4,
+    "identityHash": "086fad5e6210b952f8863e174a9c09e1",
+    "entities": [
+      {
+        "tableName": "Usuario",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Usuario` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Nombre` TEXT NOT NULL, `ApellidoPaterno` TEXT NOT NULL, `ApellidoMaterno` TEXT NOT NULL, `CURP` TEXT NOT NULL, `FechaNacimiento` TEXT NOT NULL, `Estado` TEXT NOT NULL, `Sexo` TEXT NOT NULL, `FechaRegistro` TEXT NOT NULL, `PasswordHash` TEXT NOT NULL, `WhatsappChatId` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "idUsuario",
+            "columnName": "ID_Usuario",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "Nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apellidoPaterno",
+            "columnName": "ApellidoPaterno",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "apellidoMaterno",
+            "columnName": "ApellidoMaterno",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "curp",
+            "columnName": "CURP",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fechaNacimiento",
+            "columnName": "FechaNacimiento",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estado",
+            "columnName": "Estado",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sexo",
+            "columnName": "Sexo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fechaRegistro",
+            "columnName": "FechaRegistro",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "passwordHash",
+            "columnName": "PasswordHash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "whatsappChatId",
+            "columnName": "WhatsappChatId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Usuario"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Usuario_CURP",
+            "unique": true,
+            "columnNames": [
+              "CURP"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Usuario_CURP` ON `${TABLE_NAME}` (`CURP`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Establecimiento",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Establecimiento` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Nombre` TEXT NOT NULL, `Ubicacion` TEXT NOT NULL, `TipoEstablecimiento` TEXT NOT NULL, `Capacidad` INTEGER NOT NULL, `HoraApertura` TEXT NOT NULL, `HoraCierre` TEXT NOT NULL, `DiasLaborales` TEXT NOT NULL, `MaxBoletosPorUsuario` INTEGER NOT NULL, `Vestimenta` TEXT NOT NULL, `Restricciones` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "idEstablecimiento",
+            "columnName": "ID_Establecimiento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "Nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ubicacion",
+            "columnName": "Ubicacion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipoEstablecimiento",
+            "columnName": "TipoEstablecimiento",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "capacidad",
+            "columnName": "Capacidad",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "horaApertura",
+            "columnName": "HoraApertura",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "horaCierre",
+            "columnName": "HoraCierre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diasLaborales",
+            "columnName": "DiasLaborales",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "maxBoletosPorUsuario",
+            "columnName": "MaxBoletosPorUsuario",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "vestimenta",
+            "columnName": "Vestimenta",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "restricciones",
+            "columnName": "Restricciones",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Establecimiento"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Seccion_Zona",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_SeccionZona` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_Establecimiento` INTEGER NOT NULL, `NombreZona` TEXT NOT NULL, `TipoZona` TEXT NOT NULL, `PrecioBase` REAL NOT NULL, `Capacidad` INTEGER NOT NULL, `Descripcion` TEXT NOT NULL, FOREIGN KEY(`ID_Establecimiento`) REFERENCES `Establecimiento`(`ID_Establecimiento`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idSeccionZona",
+            "columnName": "ID_SeccionZona",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idEstablecimiento",
+            "columnName": "ID_Establecimiento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombreZona",
+            "columnName": "NombreZona",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipoZona",
+            "columnName": "TipoZona",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "precioBase",
+            "columnName": "PrecioBase",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "capacidad",
+            "columnName": "Capacidad",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descripcion",
+            "columnName": "Descripcion",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_SeccionZona"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Seccion_Zona_ID_Establecimiento",
+            "unique": false,
+            "columnNames": [
+              "ID_Establecimiento"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Seccion_Zona_ID_Establecimiento` ON `${TABLE_NAME}` (`ID_Establecimiento`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Establecimiento",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Establecimiento"
+            ],
+            "referencedColumns": [
+              "ID_Establecimiento"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Asiento",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Asiento` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_SeccionZona` INTEGER NOT NULL, `Fila` TEXT, `Numero` TEXT, `CodigoAsiento` TEXT NOT NULL, FOREIGN KEY(`ID_SeccionZona`) REFERENCES `Seccion_Zona`(`ID_SeccionZona`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idAsiento",
+            "columnName": "ID_Asiento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idSeccionZona",
+            "columnName": "ID_SeccionZona",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fila",
+            "columnName": "Fila",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numero",
+            "columnName": "Numero",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "codigoAsiento",
+            "columnName": "CodigoAsiento",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Asiento"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Asiento_ID_SeccionZona",
+            "unique": false,
+            "columnNames": [
+              "ID_SeccionZona"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Asiento_ID_SeccionZona` ON `${TABLE_NAME}` (`ID_SeccionZona`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Seccion_Zona",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_SeccionZona"
+            ],
+            "referencedColumns": [
+              "ID_SeccionZona"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Funcion",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Funcion` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_Establecimiento` INTEGER NOT NULL, `NombreEvento` TEXT NOT NULL, `FechaHora` TEXT NOT NULL, `Clasificacion` TEXT NOT NULL, `Detalle` TEXT NOT NULL, FOREIGN KEY(`ID_Establecimiento`) REFERENCES `Establecimiento`(`ID_Establecimiento`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idFuncion",
+            "columnName": "ID_Funcion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idEstablecimiento",
+            "columnName": "ID_Establecimiento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombreEvento",
+            "columnName": "NombreEvento",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fechaHora",
+            "columnName": "FechaHora",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clasificacion",
+            "columnName": "Clasificacion",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "detalle",
+            "columnName": "Detalle",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Funcion"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Funcion_ID_Establecimiento",
+            "unique": false,
+            "columnNames": [
+              "ID_Establecimiento"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Funcion_ID_Establecimiento` ON `${TABLE_NAME}` (`ID_Establecimiento`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Establecimiento",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Establecimiento"
+            ],
+            "referencedColumns": [
+              "ID_Establecimiento"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Orden",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Orden` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_Usuario` INTEGER NOT NULL, `FechaCompra` TEXT NOT NULL, `MontoTotal` REAL NOT NULL, `EstadoOrden` TEXT NOT NULL, FOREIGN KEY(`ID_Usuario`) REFERENCES `Usuario`(`ID_Usuario`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idOrden",
+            "columnName": "ID_Orden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idUsuario",
+            "columnName": "ID_Usuario",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fechaCompra",
+            "columnName": "FechaCompra",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "montoTotal",
+            "columnName": "MontoTotal",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estadoOrden",
+            "columnName": "EstadoOrden",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Orden"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Orden_ID_Usuario",
+            "unique": false,
+            "columnNames": [
+              "ID_Usuario"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Orden_ID_Usuario` ON `${TABLE_NAME}` (`ID_Usuario`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Usuario",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Usuario"
+            ],
+            "referencedColumns": [
+              "ID_Usuario"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Boleto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Boleto` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_Orden` INTEGER NOT NULL, `ID_Funcion` INTEGER NOT NULL, `ID_Asiento` INTEGER, `ID_SeccionZona` INTEGER NOT NULL, `PrecioFinal` REAL NOT NULL, `EstadoBoleto` TEXT NOT NULL, FOREIGN KEY(`ID_Orden`) REFERENCES `Orden`(`ID_Orden`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ID_Funcion`) REFERENCES `Funcion`(`ID_Funcion`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ID_Asiento`) REFERENCES `Asiento`(`ID_Asiento`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ID_SeccionZona`) REFERENCES `Seccion_Zona`(`ID_SeccionZona`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idBoleto",
+            "columnName": "ID_Boleto",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idOrden",
+            "columnName": "ID_Orden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idFuncion",
+            "columnName": "ID_Funcion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idAsiento",
+            "columnName": "ID_Asiento",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idSeccionZona",
+            "columnName": "ID_SeccionZona",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "precioFinal",
+            "columnName": "PrecioFinal",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estadoBoleto",
+            "columnName": "EstadoBoleto",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Boleto"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Boleto_ID_Orden",
+            "unique": false,
+            "columnNames": [
+              "ID_Orden"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Boleto_ID_Orden` ON `${TABLE_NAME}` (`ID_Orden`)"
+          },
+          {
+            "name": "index_Boleto_ID_Funcion",
+            "unique": false,
+            "columnNames": [
+              "ID_Funcion"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Boleto_ID_Funcion` ON `${TABLE_NAME}` (`ID_Funcion`)"
+          },
+          {
+            "name": "index_Boleto_ID_Asiento",
+            "unique": false,
+            "columnNames": [
+              "ID_Asiento"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Boleto_ID_Asiento` ON `${TABLE_NAME}` (`ID_Asiento`)"
+          },
+          {
+            "name": "index_Boleto_ID_SeccionZona",
+            "unique": false,
+            "columnNames": [
+              "ID_SeccionZona"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Boleto_ID_SeccionZona` ON `${TABLE_NAME}` (`ID_SeccionZona`)"
+          },
+          {
+            "name": "index_Boleto_ID_Funcion_ID_Asiento",
+            "unique": true,
+            "columnNames": [
+              "ID_Funcion",
+              "ID_Asiento"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Boleto_ID_Funcion_ID_Asiento` ON `${TABLE_NAME}` (`ID_Funcion`, `ID_Asiento`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Orden",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Orden"
+            ],
+            "referencedColumns": [
+              "ID_Orden"
+            ]
+          },
+          {
+            "table": "Funcion",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Funcion"
+            ],
+            "referencedColumns": [
+              "ID_Funcion"
+            ]
+          },
+          {
+            "table": "Asiento",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Asiento"
+            ],
+            "referencedColumns": [
+              "ID_Asiento"
+            ]
+          },
+          {
+            "table": "Seccion_Zona",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_SeccionZona"
+            ],
+            "referencedColumns": [
+              "ID_SeccionZona"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "MetodoPago",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_MetodoPago` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Nombre` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "idMetodoPago",
+            "columnName": "ID_MetodoPago",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "Nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_MetodoPago"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Pago",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Pago` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_Orden` INTEGER NOT NULL, `ID_MetodoPago` INTEGER NOT NULL, `Monto` REAL NOT NULL, `FechaPago` TEXT NOT NULL, `EstadoPago` TEXT NOT NULL, `ReferenciaExterna` TEXT, `UltimosCuatroDigitos` TEXT, `NombreTitular` TEXT, `CuentaPaypal` TEXT, FOREIGN KEY(`ID_Orden`) REFERENCES `Orden`(`ID_Orden`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`ID_MetodoPago`) REFERENCES `MetodoPago`(`ID_MetodoPago`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "idPago",
+            "columnName": "ID_Pago",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idOrden",
+            "columnName": "ID_Orden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idMetodoPago",
+            "columnName": "ID_MetodoPago",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monto",
+            "columnName": "Monto",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fechaPago",
+            "columnName": "FechaPago",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estadoPago",
+            "columnName": "EstadoPago",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "referenciaExterna",
+            "columnName": "ReferenciaExterna",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ultimosCuatroDigitos",
+            "columnName": "UltimosCuatroDigitos",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nombreTitular",
+            "columnName": "NombreTitular",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cuentaPaypal",
+            "columnName": "CuentaPaypal",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Pago"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Pago_ID_Orden",
+            "unique": false,
+            "columnNames": [
+              "ID_Orden"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Pago_ID_Orden` ON `${TABLE_NAME}` (`ID_Orden`)"
+          },
+          {
+            "name": "index_Pago_ID_MetodoPago",
+            "unique": false,
+            "columnNames": [
+              "ID_MetodoPago"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Pago_ID_MetodoPago` ON `${TABLE_NAME}` (`ID_MetodoPago`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Orden",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Orden"
+            ],
+            "referencedColumns": [
+              "ID_Orden"
+            ]
+          },
+          {
+            "table": "MetodoPago",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_MetodoPago"
+            ],
+            "referencedColumns": [
+              "ID_MetodoPago"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Dia_Festivo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_DiaFestivo` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_Establecimiento` INTEGER NOT NULL, `Fecha` TEXT NOT NULL, `Descripcion` TEXT NOT NULL, FOREIGN KEY(`ID_Establecimiento`) REFERENCES `Establecimiento`(`ID_Establecimiento`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idDiaFestivo",
+            "columnName": "ID_DiaFestivo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idEstablecimiento",
+            "columnName": "ID_Establecimiento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fecha",
+            "columnName": "Fecha",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descripcion",
+            "columnName": "Descripcion",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_DiaFestivo"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Dia_Festivo_ID_Establecimiento",
+            "unique": false,
+            "columnNames": [
+              "ID_Establecimiento"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Dia_Festivo_ID_Establecimiento` ON `${TABLE_NAME}` (`ID_Establecimiento`)"
+          },
+          {
+            "name": "index_Dia_Festivo_ID_Establecimiento_Fecha",
+            "unique": true,
+            "columnNames": [
+              "ID_Establecimiento",
+              "Fecha"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Dia_Festivo_ID_Establecimiento_Fecha` ON `${TABLE_NAME}` (`ID_Establecimiento`, `Fecha`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Establecimiento",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Establecimiento"
+            ],
+            "referencedColumns": [
+              "ID_Establecimiento"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "WhatsappOutbox",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ID_Outbox` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ID_Orden` INTEGER NOT NULL, `Estado` TEXT NOT NULL, `Intentos` INTEGER NOT NULL, `ProximoIntento` INTEGER NOT NULL, `LeaseHasta` INTEGER NOT NULL, `UltimoError` TEXT, `MensajeIdWaha` TEXT, `CreadoEn` INTEGER NOT NULL, `EnviadoEn` INTEGER, FOREIGN KEY(`ID_Orden`) REFERENCES `Orden`(`ID_Orden`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idOutbox",
+            "columnName": "ID_Outbox",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idOrden",
+            "columnName": "ID_Orden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estado",
+            "columnName": "Estado",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intentos",
+            "columnName": "Intentos",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "proximoIntento",
+            "columnName": "ProximoIntento",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "leaseHasta",
+            "columnName": "LeaseHasta",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ultimoError",
+            "columnName": "UltimoError",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mensajeIdWaha",
+            "columnName": "MensajeIdWaha",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "creadoEn",
+            "columnName": "CreadoEn",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enviadoEn",
+            "columnName": "EnviadoEn",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "ID_Outbox"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_WhatsappOutbox_ID_Orden",
+            "unique": true,
+            "columnNames": [
+              "ID_Orden"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_WhatsappOutbox_ID_Orden` ON `${TABLE_NAME}` (`ID_Orden`)"
+          },
+          {
+            "name": "index_WhatsappOutbox_Estado_ProximoIntento",
+            "unique": false,
+            "columnNames": [
+              "Estado",
+              "ProximoIntento"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_WhatsappOutbox_Estado_ProximoIntento` ON `${TABLE_NAME}` (`Estado`, `ProximoIntento`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Orden",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ID_Orden"
+            ],
+            "referencedColumns": [
+              "ID_Orden"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '086fad5e6210b952f8863e174a9c09e1')"
+    ]
+  }
+}

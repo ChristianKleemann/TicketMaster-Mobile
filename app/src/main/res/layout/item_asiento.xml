@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_margin="4dp">
+
+    <TextView
+        android:id="@+id/tvAsientoCodigo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_seat_disponible"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/tm_text_primary"
+        tools:text="A1"
+        xmlns:tools="http://schemas.android.com/tools" />
+
+    <ImageView
+        android:id="@+id/ivAsientoCandado"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_lock"
+        android:visibility="gone"
+        android:contentDescription="@string/leyenda_ocupado" />
+
+</FrameLayout>
