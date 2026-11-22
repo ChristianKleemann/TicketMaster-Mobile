@@ -6,9 +6,9 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.work.WorkManager;
 
-import com.example.ticketmaster_mobile.waha.WahaConfig;
-import com.example.ticketmaster_mobile.waha.WahaConfigProvider;
-import com.example.ticketmaster_mobile.waha.WahaSyncScheduler;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiConfig;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiConfigProvider;
+import com.example.ticketmaster_mobile.whatsapp.WahaSyncScheduler;
 import com.example.ticketmaster_mobile.data.repository.CompraRepository;
 
 import org.junit.rules.ExternalResource;
@@ -32,7 +32,7 @@ public class EntornoRule extends ExternalResource {
 
     public Context contexto;
     public Escenario esc;
-    public FakeWahaServer waha;
+    public FakeGreenApiServer green;
     private DbIdlingResource idling;
 
     /** Envío en segundo plano en pausa: la prueba controla cuándo se procesa la cola. */
@@ -54,8 +54,8 @@ public class EntornoRule extends ExternalResource {
 
         esc = Escenario.crear(contexto);
         esc.cerrarSesion();
-        waha = FakeWahaServer.iniciar();
-        configurarWaha(configuracionNormal());
+        green = FakeGreenApiServer.iniciar();
+        configurarGreenApi(configuracionNormal());
 
         idling = new DbIdlingResource();
         IdlingRegistry.getInstance().register(idling);
@@ -65,11 +65,11 @@ public class EntornoRule extends ExternalResource {
     @Override
     protected void after() {
         if (idling != null) IdlingRegistry.getInstance().unregister(idling);
-        WahaConfigProvider.setOverrideForTesting(null);
+        GreenApiConfigProvider.setOverrideForTesting(null);
         WahaSyncScheduler.pausarParaPruebas(false);
         CompraRepository.desactivarReservasRemotas(false);
         cancelarTrabajos();
-        if (waha != null) waha.close();
+        if (green != null) green.close();
         if (esc != null) {
             esc.cerrarSesion();
             esc.cerrar();
@@ -84,17 +84,22 @@ public class EntornoRule extends ExternalResource {
     }
 
     /** Configuración válida apuntando al WAHA simulado (timeouts cortos para pruebas rápidas). */
-    public WahaConfig configuracionNormal() {
-        return new WahaConfig(waha.baseUrl(), FakeWahaServer.API_KEY_POR_DEFECTO, SESION, DESTINO,
+    public GreenApiConfig configuracionNormal() {
+        return new GreenApiConfig(green.baseUrl(),
+                FakeGreenApiServer.ID_INSTANCE,
+                FakeGreenApiServer.API_KEY_POR_DEFECTO,
+                DESTINO,
                 2000, 2000, true);
     }
 
-    public void configurarWaha(WahaConfig config) {
-        WahaConfigProvider.setOverrideForTesting(config);
+    public void configurarGreenApi(GreenApiConfig config) {
+        GreenApiConfigProvider.setOverrideForTesting(config);
     }
 
-    /** WAHA sin configurar (URL y destino vacíos): la integración queda desactivada. */
-    public void desactivarWaha() {
-        configurarWaha(new WahaConfig("", "", SESION, "", 2000, 2000, true));
+    /** GREEN API sin configurar (URL y destino vacíos): la integración queda desactivada. */
+    public void desactivarGreenApi() {
+        configurarGreenApi(new GreenApiConfig("", "", "", "", 2000, 2000, true));
     }
+
+
 }

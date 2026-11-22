@@ -21,14 +21,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * WAHA simulado para las pruebas de integración: un servidor HTTP/1.1 mínimo sobre ServerSocket
- * (sin dependencias) que escucha en 127.0.0.1, registra cada petición y responde con un guion.
+ * GREEN-API simulado para las pruebas de integración: un servidor HTTP/1.1 mínimo sobre
+ * ServerSocket (sin dependencias) que escucha en 127.0.0.1, registra cada petición y responde
+ * con un guion.
  *
- *  - POST /api/sendText          → respuesta guionada (por defecto 201 con un id de mensaje).
- *  - GET  /api/sessions/{name}   → {"name":..., "status":"WORKING"} (configurable).
- *  - Cualquier ruta con una X-Api-Key distinta de la esperada → 401.
+ *  - POST /waInstance{id}/sendMessage/{token} → respuesta guionada (por defecto 200 con idMessage).
+ *    En {@code Peticion.ruta} queda solo "/sendMessage" y el token va en {@code Peticion.apiKey}.
+ *  - Token distinto del esperado → 401.
+ *  - estadoSesion distinto de "WORKING" → 400 "instance is starting or not authorized".
  */
-public final class FakeWahaServer implements Closeable {
+public final class FakeGreenApiServer implements Closeable {
 
     /** Petición recibida. {@code status} se rellena cuando el servidor ya respondió. */
     public static final class Peticion {
@@ -46,7 +48,7 @@ public final class FakeWahaServer implements Closeable {
         }
     }
 
-    /** Respuesta que el servidor dará a un POST /api/sendText. */
+    /** Respuesta que el servidor dará a un POST sendMessage. */
     public static final class Respuesta {
         final int status;
         final String cuerpo;
@@ -64,10 +66,9 @@ public final class FakeWahaServer implements Closeable {
             return new Respuesta(status, cuerpoJson, 0, null);
         }
 
-        /** Error con el formato que usa WAHA (incluye el mensaje de la excepción). */
-        public static Respuesta errorWaha(int status, String mensaje) {
-            return http(status, "{\"statusCode\":" + status + ",\"exception\":{\"message\":\""
-                    + mensaje + "\",\"name\":\"Error\"}}");
+        /** Error de GREEN-API (el cuerpo lleva el mensaje; el cliente lo clasifica por palabras clave). */
+        public static Respuesta errorGreen(int status, String mensaje) {
+            return http(status, "{\"message\":\"" + mensaje + "\"}");
         }
 
         public Respuesta conRetardo(long ms) {
@@ -79,11 +80,15 @@ public final class FakeWahaServer implements Closeable {
         }
     }
 
-    public static final String API_KEY_POR_DEFECTO = "clave-de-prueba";
+    /** Ruta normalizada de los envíos (sin /waInstance{id} ni el token). */
+    public static final String RUTA_ENVIO = "/sendMessage";
+    public static final String ID_INSTANCE = "7103000001";
+    /** Token de la instancia simulada (en GREEN-API va dentro de la URL). */
+    public static final String API_KEY_POR_DEFECTO = "token-de-prueba";
 
     private final ServerSocket servidor;
     private final ExecutorService pool = Executors.newCachedThreadPool(r -> {
-        Thread t = new Thread(r, "fake-waha");
+        Thread t = new Thread(r, "fake-greenapi");
         t.setDaemon(true);
         return t;
     });
@@ -95,13 +100,13 @@ public final class FakeWahaServer implements Closeable {
     private volatile String apiKeyEsperada = API_KEY_POR_DEFECTO;
     private volatile boolean cerrado;
 
-    private FakeWahaServer(ServerSocket servidor) {
+    private FakeGreenApiServer(ServerSocket servidor) {
         this.servidor = servidor;
     }
 
-    public static FakeWahaServer iniciar() throws IOException {
+    public static FakeGreenApiServer iniciar() throws IOException {
         ServerSocket ss = new ServerSocket(0, 50, InetAddress.getByName("127.0.0.1"));
-        FakeWahaServer s = new FakeWahaServer(ss);
+        FakeGreenApiServer s = new FakeGreenApiServer(ss);
         s.pool.execute(s::aceptar);
         return s;
     }
@@ -112,7 +117,7 @@ public final class FakeWahaServer implements Closeable {
 
     // ------------------------------------------------------------------ guion
 
-    /** Todas las peticiones sendText siguientes responden igual (salvo las encoladas). */
+    /** Todos los envíos siguientes responden igual (salvo los encolados). */
     public void responderSiempre(Respuesta r) {
         respuestaFija = r;
     }
@@ -141,16 +146,16 @@ public final class FakeWahaServer implements Closeable {
         return new ArrayList<>(peticiones);
     }
 
-    /** Solo los POST /api/sendText. */
+    /** Solo los POST sendMessage. */
     public List<Peticion> envios() {
         List<Peticion> r = new ArrayList<>();
         for (Peticion p : peticiones) {
-            if ("POST".equals(p.metodo) && "/api/sendText".equals(p.ruta)) r.add(p);
+            if ("POST".equals(p.metodo) && RUTA_ENVIO.equals(p.ruta)) r.add(p);
         }
         return r;
     }
 
-    /** Envíos que WAHA aceptó (2xx): los mensajes que de verdad "llegaron" a WhatsApp. */
+    /** Envíos que GREEN-API aceptó (2xx): los mensajes que de verdad "llegaron" a WhatsApp. */
     public List<Peticion> enviosAceptados() {
         List<Peticion> r = new ArrayList<>();
         for (Peticion p : envios()) {
@@ -207,7 +212,15 @@ public final class FakeWahaServer implements Closeable {
                 if (n < 0) break;
                 leidos += n;
             }
-            Peticion p = new Peticion(metodo, ruta, cabeceras.get("x-api-key"),
+            String token = null;
+            String rutaNormal = ruta;
+            java.util.regex.Matcher m = java.util.regex.Pattern
+                    .compile("^/waInstance(\\d+)/([A-Za-z]+)/([^/?]+)").matcher(ruta);
+            if (m.find()) {
+                rutaNormal = "/" + m.group(2);
+                token = m.group(3);
+            }
+            Peticion p = new Peticion(metodo, rutaNormal, token,
                     new String(cuerpoBytes, 0, leidos, StandardCharsets.UTF_8));
             peticiones.add(p);
 
@@ -230,19 +243,19 @@ public final class FakeWahaServer implements Closeable {
     private Respuesta decidir(Peticion p) {
         String esperada = apiKeyEsperada;
         if (esperada != null && !esperada.equals(p.apiKey)) {
-            return Respuesta.http(401, "{\"statusCode\":401,\"message\":\"Unauthorized\"}");
+            return Respuesta.http(401, "{\"message\":\"Unauthorized\"}");
         }
-        if ("GET".equals(p.metodo) && p.ruta.startsWith("/api/sessions/")) {
-            return Respuesta.http(200, "{\"name\":\"default\",\"status\":\"" + estadoSesion + "\"}");
-        }
-        if ("POST".equals(p.metodo) && "/api/sendText".equals(p.ruta)) {
+        if ("POST".equals(p.metodo) && RUTA_ENVIO.equals(p.ruta)) {
             Respuesta r = guion.pollFirst();
             if (r != null) return r;
             if (respuestaFija != null) return respuestaFija;
+            if (!"WORKING".equals(estadoSesion)) {
+                return Respuesta.errorGreen(400, "instance is starting or not authorized");
+            }
             int n = contadorIds.incrementAndGet();
-            return Respuesta.http(201, "{\"id\":\"true_5213322180006@c.us_FAKE" + n + "\",\"timestamp\":1}");
+            return Respuesta.http(200, "{\"idMessage\":\"FAKE" + n + "\"}");
         }
-        return Respuesta.http(404, "{\"statusCode\":404,\"message\":\"Not Found\"}");
+        return Respuesta.http(404, "{\"message\":\"Not Found\"}");
     }
 
     private static void escribir(OutputStream out, Respuesta r) throws IOException {
@@ -266,7 +279,9 @@ public final class FakeWahaServer implements Closeable {
             case 401: return "Unauthorized";
             case 404: return "Not Found";
             case 422: return "Unprocessable Entity";
+            case 403: return "Forbidden";
             case 429: return "Too Many Requests";
+            case 466: return "Limit";
             case 500: return "Internal Server Error";
             case 503: return "Service Unavailable";
             default: return "Status";

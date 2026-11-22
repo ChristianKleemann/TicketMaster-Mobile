@@ -22,9 +22,10 @@ import com.example.ticketmaster_mobile.data.entity.Usuario;
 import com.example.ticketmaster_mobile.data.pojo.OrdenHistorialItem;
 import com.example.ticketmaster_mobile.session.SessionManager;
 import com.example.ticketmaster_mobile.ui.tickets.adapter.OrdenHistorialAdapter;
-import com.example.ticketmaster_mobile.waha.TelefonoWhatsapp;
-import com.example.ticketmaster_mobile.waha.WahaClient;
-import com.example.ticketmaster_mobile.waha.WahaConfigProvider;
+import com.example.ticketmaster_mobile.whatsapp.TelefonoWhatsapp;
+import com.example.ticketmaster_mobile.whatsapp.EnvioResultado;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiClient;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiConfigProvider;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -166,15 +167,15 @@ public class ProfileFragment extends Fragment {
     /** Comprueba conexión, clave y sesión de WAHA y muestra el resultado en un diálogo. */
     private void probarConexionWhatsapp() {
         btnProbarWhatsapp.setEnabled(false);
-        Toast.makeText(requireContext(), "Probando conexión con WAHA…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Probando conexión con Whatsapp…", Toast.LENGTH_SHORT).show();
         DatabaseExecutor.runAsync(
-                () -> new WahaClient(WahaConfigProvider.actual()).diagnosticar(null),
+                () -> new GreenApiClient(GreenApiConfigProvider.actual()).enviarTexto("Prueba de conexión de TicketMaster Mobile"),
                 dg -> {
                     btnProbarWhatsapp.setEnabled(true);
                     if (getContext() == null) return;
                     new androidx.appcompat.app.AlertDialog.Builder(requireContext())
-                            .setTitle(dg.esOk() ? "✅ Conexión correcta" : "⚠️ Problema de conexión")
-                            .setMessage(dg.mensaje)
+                            .setTitle(dg.tipo == EnvioResultado.Tipo.EXITO ? "Mensaje de prueba enviado" : "No se pudo enviar")
+                            .setMessage(dg.detalle != null ? dg.detalle : "Revisa tu WhatsApp, debió llegar un mensaje de prueba.")
                             .setPositiveButton("Aceptar", null)
                             .show();
                 });

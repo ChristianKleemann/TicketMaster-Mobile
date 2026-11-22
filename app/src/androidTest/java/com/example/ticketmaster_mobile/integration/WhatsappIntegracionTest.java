@@ -11,19 +11,19 @@ import com.example.ticketmaster_mobile.data.entity.WhatsappOutbox;
 import com.example.ticketmaster_mobile.integration.soporte.Compras;
 import com.example.ticketmaster_mobile.integration.soporte.EntornoRule;
 import com.example.ticketmaster_mobile.integration.soporte.Escenario;
-import com.example.ticketmaster_mobile.integration.soporte.FakeWahaServer;
-import com.example.ticketmaster_mobile.integration.soporte.FakeWahaServer.Peticion;
-import com.example.ticketmaster_mobile.integration.soporte.FakeWahaServer.Respuesta;
+import com.example.ticketmaster_mobile.integration.soporte.FakeGreenApiServer;
 import com.example.ticketmaster_mobile.integration.soporte.Json;
-import com.example.ticketmaster_mobile.waha.Backoff;
-import com.example.ticketmaster_mobile.waha.CircuitBreaker;
-import com.example.ticketmaster_mobile.waha.MensajeTicketFormatter;
-import com.example.ticketmaster_mobile.waha.OutboxProcessor;
-import com.example.ticketmaster_mobile.waha.RoomOutboxStore;
-import com.example.ticketmaster_mobile.waha.RoomTicketSource;
-import com.example.ticketmaster_mobile.waha.WahaClient;
-import com.example.ticketmaster_mobile.waha.WahaConfig;
-import com.example.ticketmaster_mobile.waha.WahaConfigProvider;
+import com.example.ticketmaster_mobile.whatsapp.Backoff;
+import com.example.ticketmaster_mobile.whatsapp.CircuitBreaker;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiClient;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiConfig;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiConfigProvider;
+import com.example.ticketmaster_mobile.whatsapp.MensajeTicketFormatter;
+import com.example.ticketmaster_mobile.whatsapp.OutboxProcessor;
+import com.example.ticketmaster_mobile.whatsapp.RoomOutboxStore;
+import com.example.ticketmaster_mobile.whatsapp.RoomTicketSource;
+import com.example.ticketmaster_mobile.integration.soporte.FakeGreenApiServer.Peticion;
+import com.example.ticketmaster_mobile.integration.soporte.FakeGreenApiServer.Respuesta;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,8 +40,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Integración del envío por WhatsApp: compra real → cola (outbox) en Room → OutboxProcessor real →
- * WahaClient real (HTTP) → servidor WAHA simulado. Comprueba que el mensaje es el correcto, que
- * llega una sola vez y que los fallos se tratan como se espera. No requiere WAHA ni red.
+ * GreenApiClient real (HTTP) → servidor whatsapp simulado. Comprueba que el mensaje es el correcto, que
+ * llega una sola vez y que los fallos se tratan como se espera. No requiere whatsapp ni red.
  */
 @RunWith(AndroidJUnit4.class)
 public class WhatsappIntegracionTest {
@@ -60,7 +60,7 @@ public class WhatsappIntegracionTest {
         return new OutboxProcessor(
                 new RoomOutboxStore(e().db.whatsappOutboxDao()),
                 new RoomTicketSource(e().db),
-                new WahaClient(WahaConfigProvider.actual()),
+                new GreenApiClient(GreenApiConfigProvider.actual()),
                 new Backoff(1_000L, 5_000L, new Random(7)),
                 breaker,
                 reloj::get,
@@ -108,13 +108,12 @@ public class WhatsappIntegracionTest {
         assertEquals(0, r.fallidos);
         assertEquals(0, r.reprogramados);
 
-        List<Peticion> aceptadas = entorno.waha.enviosAceptados();
+        List<Peticion> aceptadas = entorno.green.enviosAceptados();
         assertEquals(1, aceptadas.size());
         Peticion p = aceptadas.get(0);
         assertEquals("POST", p.metodo);
-        assertEquals("/api/sendText", p.ruta);
-        assertEquals(FakeWahaServer.API_KEY_POR_DEFECTO, p.apiKey);
-        assertEquals(EntornoRule.SESION, Json.objeto(p.cuerpo).optString("session"));
+        assertEquals("/sendMessage", p.ruta);
+        assertEquals(FakeGreenApiServer.API_KEY_POR_DEFECTO, p.apiKey);
         assertEquals(EntornoRule.CHAT_ID_ESPERADO, Json.objeto(p.cuerpo).optString("chatId"));
 
         WhatsappOutbox f = fila(orden);
@@ -131,7 +130,7 @@ public class WhatsappIntegracionTest {
 
         procesar();
 
-        String texto = Json.texto(entorno.waha.enviosAceptados().get(0));
+        String texto = Json.texto(entorno.green.enviosAceptados().get(0));
         assertTrue(texto, texto.contains("Compra confirmada"));
         assertTrue(texto, texto.contains("Orden #" + orden));
         assertTrue(texto, texto.contains("Ref. " + referencia));
@@ -154,7 +153,7 @@ public class WhatsappIntegracionTest {
 
         procesar();
 
-        String texto = Json.texto(entorno.waha.enviosAceptados().get(0));
+        String texto = Json.texto(entorno.green.enviosAceptados().get(0));
         assertTrue(texto, texto.contains("Tradicional — asientos A1, A2 — $180.00"));
         assertTrue(texto, texto.contains("Total: $180.00 MXN"));
         assertTrue(texto, texto.contains("PayPal"));
@@ -168,8 +167,8 @@ public class WhatsappIntegracionTest {
 
         procesar();
 
-        String texto = Json.texto(entorno.waha.enviosAceptados().get(0));
-        assertFalse(texto.contains(FakeWahaServer.API_KEY_POR_DEFECTO));
+        String texto = Json.texto(entorno.green.enviosAceptados().get(0));
+        assertFalse(texto.contains(FakeGreenApiServer.API_KEY_POR_DEFECTO));
         assertFalse(texto.contains(Escenario.CURP));
         assertFalse(texto.contains(e().texto("SELECT PasswordHash FROM Usuario WHERE ID_Usuario = " + e().usuario1)));
     }
@@ -180,8 +179,8 @@ public class WhatsappIntegracionTest {
 
         procesar();
 
-        assertEquals(1, entorno.waha.enviosAceptados().size());
-        String texto = Json.texto(entorno.waha.enviosAceptados().get(0)); // falla si el JSON no es válido
+        assertEquals(1, entorno.green.enviosAceptados().size());
+        String texto = Json.texto(entorno.green.enviosAceptados().get(0)); // falla si el JSON no es válido
         assertTrue(texto, texto.contains(Escenario.EVENTO_RARO));
         assertTrue(texto, texto.contains("Orden #" + orden));
     }
@@ -194,7 +193,7 @@ public class WhatsappIntegracionTest {
 
         procesar();
 
-        String texto = Json.texto(entorno.waha.enviosAceptados().get(0));
+        String texto = Json.texto(entorno.green.enviosAceptados().get(0));
         assertTrue(texto, texto.contains("*Evento malo Inyectado*"));
         assertFalse(texto, texto.contains("~malo~"));
     }
@@ -208,7 +207,7 @@ public class WhatsappIntegracionTest {
         OutboxProcessor.Resumen r = procesar();
 
         assertEquals(3, r.enviados);
-        List<Peticion> envios = entorno.waha.enviosAceptados();
+        List<Peticion> envios = entorno.green.enviosAceptados();
         assertEquals(3, envios.size());
         Set<String> textos = new HashSet<>();
         for (Peticion p : envios) textos.add(Json.texto(p));
@@ -230,7 +229,7 @@ public class WhatsappIntegracionTest {
         OutboxProcessor.Resumen segunda = procesar();
 
         assertEquals(0, segunda.enviados);
-        assertEquals(1, entorno.waha.envios().size());
+        assertEquals(1, entorno.green.envios().size());
     }
 
     // ------------------------------------------------------------------ fallos transitorios y recuperación
@@ -238,7 +237,7 @@ public class WhatsappIntegracionTest {
     @Test
     public void unErrorDelServidorSeReintentaYSeEntregaUnaSolaVez() {
         int orden = comprarTeatro(1);
-        entorno.waha.encolar(Respuesta.errorWaha(503, "Service Unavailable"));
+        entorno.green.encolar(Respuesta.errorGreen(503, "Service Unavailable"));
 
         OutboxProcessor.Resumen primera = procesar();
 
@@ -250,35 +249,35 @@ public class WhatsappIntegracionTest {
         assertNotNull(f.ultimoError);
         assertTrue(f.ultimoError, f.ultimoError.contains("503"));
         assertTrue("Debe esperar antes de reintentar", f.proximoIntento > reloj.get());
-        assertEquals("El error no debe contar como mensaje entregado", 0, entorno.waha.enviosAceptados().size());
+        assertEquals("El error no debe contar como mensaje entregado", 0, entorno.green.enviosAceptados().size());
 
         avanzar(60_000L);
         OutboxProcessor.Resumen segunda = procesar();
 
         assertEquals(1, segunda.enviados);
-        assertEquals(2, entorno.waha.envios().size());
-        assertEquals(1, entorno.waha.enviosAceptados().size());
+        assertEquals(2, entorno.green.envios().size());
+        assertEquals(1, entorno.green.enviosAceptados().size());
         assertEquals(WhatsappOutbox.ENVIADO, fila(orden).estado);
     }
 
     @Test
     public void unReintentoNoSeAdelantaAntesDeSuHora() {
         comprarTeatro(1);
-        entorno.waha.encolar(Respuesta.errorWaha(503, "Service Unavailable"));
+        entorno.green.encolar(Respuesta.errorGreen(503, "Service Unavailable"));
         procesar();
-        int enviosAntes = entorno.waha.envios().size();
+        int enviosAntes = entorno.green.envios().size();
 
         OutboxProcessor.Resumen r = procesar(); // sin avanzar el reloj
 
         assertEquals(0, r.enviados);
-        assertEquals(enviosAntes, entorno.waha.envios().size());
+        assertEquals(enviosAntes, entorno.green.envios().size());
     }
 
     @Test
     public void conLaSesionDeWhatsappSinEscanearNoSeConsumenIntentosYSeEsperaAlMenosCincoMinutos() {
         int orden = comprarTeatro(1);
-        entorno.waha.estadoSesion("SCAN_QR_CODE");
-        entorno.waha.responderSiempre(Respuesta.errorWaha(422, "Session status is not as expected"));
+        entorno.green.estadoSesion("SCAN_QR_CODE");
+        entorno.green.responderSiempre(Respuesta.errorGreen(422, "Session status is not as expected"));
 
         OutboxProcessor.Resumen r = procesar();
 
@@ -290,8 +289,8 @@ public class WhatsappIntegracionTest {
         assertTrue(f.proximoIntento >= reloj.get() + OutboxProcessor.ESPERA_MIN_INFRA_MS - 1_000L);
 
         // Se escanea el QR: al llegar la hora, el mensaje sale
-        entorno.waha.estadoSesion("WORKING");
-        entorno.waha.restablecerRespuestas();
+        entorno.green.estadoSesion("WORKING");
+        entorno.green.restablecerRespuestas();
         avanzar(OutboxProcessor.ESPERA_MIN_INFRA_MS + 1_000L);
         assertEquals(1, procesar().enviados);
         assertEquals(WhatsappOutbox.ENVIADO, fila(orden).estado);
@@ -300,7 +299,7 @@ public class WhatsappIntegracionTest {
     @Test
     public void unaApiKeyRechazadaNoPenalizaYSeRecuperaAlCorregirla() {
         int orden = comprarTeatro(1);
-        entorno.waha.exigirApiKey("otra-clave");
+        entorno.green.exigirApiKey("otra-clave");
 
         OutboxProcessor.Resumen r = procesar();
 
@@ -309,9 +308,9 @@ public class WhatsappIntegracionTest {
         assertEquals(WhatsappOutbox.PENDIENTE, f.estado);
         assertEquals(0, f.intentos);
         assertTrue(f.ultimoError, f.ultimoError.contains("API key"));
-        assertEquals(0, entorno.waha.enviosAceptados().size());
+        assertEquals(0, entorno.green.enviosAceptados().size());
 
-        entorno.waha.exigirApiKey(FakeWahaServer.API_KEY_POR_DEFECTO);
+        entorno.green.exigirApiKey(FakeGreenApiServer.API_KEY_POR_DEFECTO);
         avanzar(OutboxProcessor.ESPERA_MIN_INFRA_MS + 1_000L);
         assertEquals(1, procesar().enviados);
     }
@@ -319,7 +318,7 @@ public class WhatsappIntegracionTest {
     @Test
     public void siWahaTardaMasDelTimeoutSeReintentaYSeAvisaQueLaEntregaPudoOcurrir() {
         int orden = comprarTeatro(1);
-        entorno.waha.encolar(Respuesta.http(201, "{\"id\":\"lento\"}").conRetardo(5_000));
+        entorno.green.encolar(Respuesta.http(201, "{\"id\":\"lento\"}").conRetardo(5_000));
 
         OutboxProcessor.Resumen r = procesar();
 
@@ -332,7 +331,7 @@ public class WhatsappIntegracionTest {
     @Test
     public void conWahaApagadoLaOrdenQuedaPendienteYLaCompraIntacta() {
         int orden = comprarTeatro(1);
-        entorno.waha.close();
+        entorno.green.close();
 
         OutboxProcessor.Resumen r = procesar();
 
@@ -349,12 +348,13 @@ public class WhatsappIntegracionTest {
     @Test
     public void cuandoWahaVuelveEnOtraDireccionLaOrdenPendienteSeEntrega() throws Exception {
         int orden = comprarTeatro(1);
-        entorno.waha.close();
+        entorno.green.close();
         assertEquals(1, procesar().reprogramados);
 
-        try (FakeWahaServer nuevo = FakeWahaServer.iniciar()) {
-            entorno.configurarWaha(new WahaConfig(nuevo.baseUrl(), FakeWahaServer.API_KEY_POR_DEFECTO,
-                    EntornoRule.SESION, EntornoRule.DESTINO, 2000, 2000, true));
+        try (FakeGreenApiServer nuevo = FakeGreenApiServer.iniciar()) {
+            entorno.configurarGreenApi(new GreenApiConfig(nuevo.baseUrl(),
+                    FakeGreenApiServer.ID_INSTANCE, FakeGreenApiServer.API_KEY_POR_DEFECTO,
+                    EntornoRule.DESTINO, 2000, 2000, true));
             avanzar(60_000L);
 
             assertEquals(1, procesar().enviados);
@@ -370,12 +370,12 @@ public class WhatsappIntegracionTest {
             comprarTeatro(e().usuario1, e().teatroFuncion, e().teatroPlatea, 1000, 1);
             comprarTeatro(e().usuario2, e().teatroFuncion, e().teatroPlatea, 1000, 1);
         }
-        entorno.waha.responderSiempre(Respuesta.errorWaha(503, "Service Unavailable"));
+        entorno.green.responderSiempre(Respuesta.errorGreen(503, "Service Unavailable"));
 
         OutboxProcessor.Resumen r = procesar();
 
         assertTrue("El circuito debe abrirse", r.circuitoAbierto);
-        assertEquals("Solo 5 intentos contra el servidor caído", 5, entorno.waha.envios().size());
+        assertEquals("Solo 5 intentos contra el servidor caído", 5, entorno.green.envios().size());
         assertEquals(0, r.enviados);
         assertEquals(6, e().numero("SELECT COUNT(*) FROM WhatsappOutbox WHERE Estado IN ('PENDIENTE','ENVIANDO')"));
     }
@@ -385,7 +385,7 @@ public class WhatsappIntegracionTest {
     @Test
     public void unaPeticionInvalidaFallaSinReintentosYSePuedeReabrir() {
         int orden = comprarTeatro(1);
-        entorno.waha.responderSiempre(Respuesta.errorWaha(400, "chatId is invalid"));
+        entorno.green.responderSiempre(Respuesta.errorGreen(400, "chatId is invalid"));
 
         OutboxProcessor.Resumen r = procesar();
 
@@ -397,10 +397,10 @@ public class WhatsappIntegracionTest {
 
         avanzar(60 * 60_000L);
         assertEquals("Un fallo permanente no se reintenta solo", 0, procesar().enviados);
-        assertEquals(1, entorno.waha.envios().size());
+        assertEquals(1, entorno.green.envios().size());
 
         // El usuario corrige la configuración y reabre las fallidas
-        entorno.waha.restablecerRespuestas();
+        entorno.green.restablecerRespuestas();
         assertEquals(1, e().db.whatsappOutboxDao().reabrirFallidas(reloj.get()));
         assertEquals(1, procesar().enviados);
         assertEquals(WhatsappOutbox.ENVIADO, fila(orden).estado);
@@ -409,7 +409,7 @@ public class WhatsappIntegracionTest {
     @Test
     public void unDestinoSinLidSeMarcaComoFallidoConUnMensajeUtil() {
         int orden = comprarTeatro(1);
-        entorno.waha.responderSiempre(Respuesta.errorWaha(500, "No LID for user"));
+        entorno.green.responderSiempre(Respuesta.errorGreen(500, "No LID for user"));
 
         OutboxProcessor.Resumen r = procesar();
 
@@ -418,7 +418,7 @@ public class WhatsappIntegracionTest {
         assertEquals(WhatsappOutbox.FALLIDO, f.estado);
         assertTrue(f.ultimoError, f.ultimoError.contains("No LID for user"));
         assertTrue(f.ultimoError, f.ultimoError.contains("521"));
-        assertEquals(1, entorno.waha.envios().size());
+        assertEquals(1, entorno.green.envios().size());
     }
 
     @Test
@@ -430,7 +430,7 @@ public class WhatsappIntegracionTest {
         OutboxProcessor.Resumen r = procesar();
 
         assertEquals(1, r.fallidos);
-        assertEquals(0, entorno.waha.envios().size());
+        assertEquals(0, entorno.green.envios().size());
         assertEquals(WhatsappOutbox.FALLIDO, fila(orden).estado);
     }
 
@@ -440,7 +440,7 @@ public class WhatsappIntegracionTest {
         e().db.getOpenHelper().getWritableDatabase().execSQL(
                 "UPDATE WhatsappOutbox SET Intentos = " + (OutboxProcessor.MAX_INTENTOS - 1)
                         + " WHERE ID_Orden = " + orden);
-        entorno.waha.responderSiempre(Respuesta.errorWaha(503, "Service Unavailable"));
+        entorno.green.responderSiempre(Respuesta.errorGreen(503, "Service Unavailable"));
 
         OutboxProcessor.Resumen r = procesar();
 
@@ -453,12 +453,12 @@ public class WhatsappIntegracionTest {
     @Test
     public void conWahaSinConfigurarNoSeEnviaNadaYNoSeConsumenIntentos() {
         int orden = comprarTeatro(1);
-        entorno.desactivarWaha();
+        entorno.desactivarGreenApi();
 
         OutboxProcessor.Resumen r = procesar();
 
         assertEquals(0, r.enviados);
-        assertEquals(0, entorno.waha.envios().size());
+        assertEquals(0, entorno.green.envios().size());
         assertEquals(0, fila(orden).intentos);
         assertEquals(WhatsappOutbox.PENDIENTE, fila(orden).estado);
     }
@@ -468,7 +468,7 @@ public class WhatsappIntegracionTest {
     @Test
     public void dosProcesadoresSimultaneosEnvianLaOrdenUnaSolaVez() throws Exception {
         int orden = comprarTeatro(1);
-        entorno.waha.responderSiempre(Respuesta.http(201, "{\"id\":\"true_x@c.us_UNICO\"}").conRetardo(400));
+        entorno.green.responderSiempre(Respuesta.http(201, "{\"id\":\"true_x@c.us_UNICO\"}").conRetardo(400));
         reloj.set(Math.max(reloj.get(), System.currentTimeMillis()));
 
         CountDownLatch salida = new CountDownLatch(1);
@@ -492,7 +492,7 @@ public class WhatsappIntegracionTest {
         salida.countDown();
         assertTrue(terminan.await(30, TimeUnit.SECONDS));
 
-        assertEquals("Solo un procesador debe reclamar la orden", 1, entorno.waha.envios().size());
+        assertEquals("Solo un procesador debe reclamar la orden", 1, entorno.green.envios().size());
         int enviados = 0;
         for (OutboxProcessor.Resumen r : resumenes) enviados += r.enviados;
         assertEquals(1, enviados);
@@ -510,7 +510,7 @@ public class WhatsappIntegracionTest {
         OutboxProcessor.Resumen r = procesar();
 
         assertEquals(0, r.enviados);
-        assertEquals(0, entorno.waha.envios().size());
+        assertEquals(0, entorno.green.envios().size());
         assertEquals(WhatsappOutbox.ENVIANDO, fila(orden).estado);
     }
 
@@ -526,6 +526,6 @@ public class WhatsappIntegracionTest {
 
         assertEquals(1, r.enviados);
         assertEquals(WhatsappOutbox.ENVIADO, fila(orden).estado);
-        assertEquals(1, entorno.waha.enviosAceptados().size());
+        assertEquals(1, entorno.green.enviosAceptados().size());
     }
 }

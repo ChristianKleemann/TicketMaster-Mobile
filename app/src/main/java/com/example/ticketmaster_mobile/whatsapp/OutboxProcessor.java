@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /**
  * Vacía la cola de notificaciones: por cada entrada vencida lee el ticket de la DB, arma el mensaje

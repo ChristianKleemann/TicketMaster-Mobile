@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /** Traduce los errores técnicos guardados en el outbox a mensajes claros para el usuario. */
 public final class MensajesWhatsapp {

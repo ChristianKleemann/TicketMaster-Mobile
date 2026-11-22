@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 import android.content.Context;
 
@@ -32,7 +32,7 @@ public class WahaSyncWorker extends Worker {
     @Override
     public Result doWork() {
         if (WahaSyncScheduler.estaPausadoParaPruebas()) return Result.success();
-        WahaConfig config = WahaConfigProvider.actual();
+        GreenApiConfig config = GreenApiConfigProvider.actual();
         if (!config.servidorConfigurado()) return Result.success();   // integración desactivada
 
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
@@ -46,7 +46,7 @@ public class WahaSyncWorker extends Worker {
                 OutboxProcessor procesador = new OutboxProcessor(
                         store,
                         new RoomTicketSource(db),
-                        new WahaClient(config),
+                        new GreenApiClient(config),
                         Backoff.porDefecto(),
                         BREAKER,
                         System::currentTimeMillis,

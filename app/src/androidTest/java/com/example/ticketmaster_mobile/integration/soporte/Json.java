@@ -17,7 +17,7 @@ public final class Json {
         }
     }
 
-    public static String texto(FakeWahaServer.Peticion p) {
+    public static String texto(FakeGreenApiServer.Peticion p) {
         try {
             return objeto(p.cuerpo).getString("text");
         } catch (JSONException e) {

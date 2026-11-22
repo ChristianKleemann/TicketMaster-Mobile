@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /**
  * Cola persistente de notificaciones (outbox). La implementación real vive en Room

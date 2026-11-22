@@ -2,8 +2,8 @@ package com.example.ticketmaster_mobile;
 
 import android.app.Application;
 
-import com.example.ticketmaster_mobile.waha.WahaConfigProvider;
-import com.example.ticketmaster_mobile.waha.WahaSyncScheduler;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiConfigProvider;
+import com.example.ticketmaster_mobile.whatsapp.WahaSyncScheduler;
 import com.example.ticketmaster_mobile.data.remote.CatalogoFirestore;
 
 /**
@@ -15,7 +15,7 @@ public class TicketMasterApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (WahaConfigProvider.actual().servidorConfigurado()) {
+        if (GreenApiConfigProvider.actual().servidorConfigurado()) {
             WahaSyncScheduler.asegurarRevisionPeriodica(this);
             WahaSyncScheduler.programarAhora(this);
         }

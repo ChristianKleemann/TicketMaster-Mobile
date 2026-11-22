@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

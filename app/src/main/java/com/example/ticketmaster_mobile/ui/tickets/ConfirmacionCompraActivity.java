@@ -23,8 +23,8 @@ import com.example.ticketmaster_mobile.data.pojo.BoletoDetalle;
 import com.example.ticketmaster_mobile.VincularWhatsappDialog;
 import com.example.ticketmaster_mobile.data.entity.Usuario;
 import com.example.ticketmaster_mobile.data.entity.WhatsappOutbox;
-import com.example.ticketmaster_mobile.waha.MensajesWhatsapp;
-import com.example.ticketmaster_mobile.waha.WahaSyncScheduler;
+import com.example.ticketmaster_mobile.whatsapp.MensajesWhatsapp;
+import com.example.ticketmaster_mobile.whatsapp.WahaSyncScheduler;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -6,16 +6,16 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-// --- Configuración de WAHA (WhatsApp HTTP API) -------------------------------------------------
+// --- Configuración de GREEN-API (WhatsApp) -----------------------------------------------------
 // Se lee de local.properties (no versionado) o de variables de entorno (CI). Ver
-// local.properties.example y WAHA_INTEGRACION.md. Si faltan URL o destino, la integración queda
-// desactivada y la app funciona igual.
+// local.properties.example. Si faltan los datos de la instancia o el destino, la integración
+// queda desactivada y la app funciona igual.
 val localProps = Properties().apply {
     val txt = providers.fileContents(rootProject.layout.projectDirectory.file("local.properties")).asText
     if (txt.isPresent) load(StringReader(txt.get()))
 }
 
-fun wahaProp(key: String): String {
+fun prop(key: String): String {
     val env = providers.environmentVariable(key.uppercase().replace('.', '_')).orNull
     return (localProps.getProperty(key) ?: env ?: "").trim()
 }
@@ -47,10 +47,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "WAHA_BASE_URL", wahaProp("waha.baseUrl").asBuildConfigString())
-        buildConfigField("String", "WAHA_API_KEY", wahaProp("waha.apiKey").asBuildConfigString())
-        buildConfigField("String", "WAHA_SESSION", wahaProp("waha.session").ifEmpty { "default" }.asBuildConfigString())
-        buildConfigField("String", "WAHA_CHAT_DESTINO", wahaProp("waha.chatDestino").asBuildConfigString())
+        buildConfigField("String", "GREEN_API_URL", prop("green.apiUrl").ifEmpty { "https://api.green-api.com" }.asBuildConfigString())
+        buildConfigField("String", "GREEN_ID_INSTANCE", prop("green.idInstance").asBuildConfigString())
+        buildConfigField("String", "GREEN_API_TOKEN", prop("green.apiToken").asBuildConfigString())
+        buildConfigField("String", "GREEN_CHAT_DESTINO", prop("green.chatDestino").asBuildConfigString())
 
         // Exporta el esquema de Room como JSON (útil para migraciones futuras)
         javaCompileOptions {
@@ -61,13 +61,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            // Solo en debug se permite http:// (emulador -> 10.0.2.2, WAHA en la LAN)
-            buildConfigField("boolean", "WAHA_ALLOW_HTTP", "true")
-        }
         release {
-            // En release se EXIGE https:// (también lo impone network_security_config.xml)
-            buildConfigField("boolean", "WAHA_ALLOW_HTTP", "false")
             optimization {
                 enable = false
             }

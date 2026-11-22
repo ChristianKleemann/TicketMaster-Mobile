@@ -393,7 +393,7 @@ public class CompraBoletosIntegracionTest {
 
     @Test
     public void conWahaDesactivadoLaCompraSigueFuncionandoYNoEncola() {
-        entorno.desactivarWaha();
+        entorno.desactivarGreenApi();
 
         Resultado r = comprarTeatro(e().usuario1, 1);
 
@@ -404,7 +404,7 @@ public class CompraBoletosIntegracionTest {
 
     @Test
     public void laCompraNoDependeDeQueWahaEsteDisponible() {
-        entorno.waha.close();
+        entorno.green.close();
 
         Resultado r = comprarTeatro(e().usuario1, 1);
 

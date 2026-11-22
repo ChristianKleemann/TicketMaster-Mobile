@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 import com.example.ticketmaster_mobile.data.dao.WhatsappOutboxDao;
 import com.example.ticketmaster_mobile.data.entity.WhatsappOutbox;

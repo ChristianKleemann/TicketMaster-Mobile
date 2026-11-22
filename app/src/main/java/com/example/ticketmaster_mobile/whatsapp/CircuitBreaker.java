@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /**
  * Interruptor de circuito: tras {@code umbral} fallos consecutivos de infraestructura se "abre" y

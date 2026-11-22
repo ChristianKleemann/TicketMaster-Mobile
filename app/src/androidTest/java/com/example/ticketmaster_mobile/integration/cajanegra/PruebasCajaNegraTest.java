@@ -11,11 +11,13 @@ import com.example.ticketmaster_mobile.data.entity.WhatsappOutbox;
 import com.example.ticketmaster_mobile.integration.soporte.EntornoRule;
 import com.example.ticketmaster_mobile.integration.soporte.Escenario;
 import com.example.ticketmaster_mobile.integration.soporte.Esperar;
-import com.example.ticketmaster_mobile.integration.soporte.FakeWahaServer.Peticion;
 import com.example.ticketmaster_mobile.integration.soporte.Fechas;
 import com.example.ticketmaster_mobile.integration.soporte.Json;
 import com.example.ticketmaster_mobile.integration.uiautomator.Ua;
 import com.example.ticketmaster_mobile.session.SessionManager;
+import com.example.ticketmaster_mobile.integration.soporte.FakeGreenApiServer;
+import com.example.ticketmaster_mobile.integration.soporte.FakeGreenApiServer.Peticion;
+import com.example.ticketmaster_mobile.integration.soporte.FakeGreenApiServer.Respuesta;
 
 import org.junit.After;
 import org.junit.Rule;
@@ -273,11 +275,11 @@ public class PruebasCajaNegraTest {
 
         // 5c · llega un solo mensaje a WhatsApp, sin datos sensibles
         assertTrue("El Worker debe enviar el ticket a WAHA (¿el dispositivo tiene red?)",
-                Esperar.hasta(ESPERA_ENVIO_MS, () -> entorno.waha.enviosAceptados().size() >= 1));
-        List<Peticion> aceptadas = entorno.waha.enviosAceptados();
+                Esperar.hasta(ESPERA_ENVIO_MS, () -> entorno.green.enviosAceptados().size() >= 1));
+        List<Peticion> aceptadas = entorno.green.enviosAceptados();
         assertEquals("Un solo mensaje por compra", 1, aceptadas.size());
         Peticion p = aceptadas.get(0);
-        assertEquals("/api/sendText", p.ruta);
+        assertEquals("/sendMessage", p.ruta);
         assertEquals(EntornoRule.CHAT_ID_ESPERADO, Json.objeto(p.cuerpo).optString("chatId"));
 
         int orden = entorno.esc.ultimaOrden();
@@ -298,6 +300,6 @@ public class PruebasCajaNegraTest {
         assertEquals("Una sola fila por orden", 1,
                 entorno.esc.numero("SELECT COUNT(*) FROM WhatsappOutbox WHERE ID_Orden = " + orden));
         Esperar.hasta(5_000L, () -> false);
-        assertEquals(1, entorno.waha.enviosAceptados().size());
+        assertEquals(1, entorno.green.enviosAceptados().size());
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /**
  * Validación y normalización del número de WhatsApp que captura el usuario. Java puro.
@@ -12,7 +12,7 @@ public final class TelefonoWhatsapp {
     public static final class Resultado {
         /** Solo dígitos en formato internacional, p. ej. "5213322180006". null si hay error. */
         public final String digitos;
-        /** chatId de WAHA, p. ej. "5213322180006@c.us". null si hay error. */
+        /** chatId de Whatsapp, p. ej. "5213322180006@c.us". null si hay error. */
         public final String chatId;
         /** Mensaje para el usuario; null si el número es válido. */
         public final String error;

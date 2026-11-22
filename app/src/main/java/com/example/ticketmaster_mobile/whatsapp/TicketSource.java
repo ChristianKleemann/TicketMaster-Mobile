@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /** Origen de los datos del ticket (la DB de la app). */
 public interface TicketSource {

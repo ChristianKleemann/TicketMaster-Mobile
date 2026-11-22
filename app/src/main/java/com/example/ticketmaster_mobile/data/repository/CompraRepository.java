@@ -15,8 +15,8 @@ import com.example.ticketmaster_mobile.data.entity.Orden;
 import com.example.ticketmaster_mobile.data.entity.Pago;
 import com.example.ticketmaster_mobile.data.entity.SeccionZona;
 import com.example.ticketmaster_mobile.data.entity.WhatsappOutbox;
-import com.example.ticketmaster_mobile.waha.WahaConfigProvider;
-import com.example.ticketmaster_mobile.waha.WahaSyncScheduler;
+import com.example.ticketmaster_mobile.whatsapp.WahaSyncScheduler;
+import com.example.ticketmaster_mobile.whatsapp.GreenApiConfigProvider;
 
 import com.example.ticketmaster_mobile.data.remote.ReservasFirestore;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +34,6 @@ import java.util.UUID;
 
 /**
  * Lógica de negocio de "Adquirir Boletos".
- *
  * {@link #realizarCompra} valida las reglas del establecimiento y, si todas se cumplen, crea la Orden,
  * un Boleto por cada lugar/asiento y el Pago dentro de UNA transacción de Room. Si algo falla
  * (regla de negocio, aforo agotado, asiento ya vendido) se revierte todo y no queda ningún registro
@@ -288,7 +287,7 @@ public class CompraRepository {
         // 8) Notificación de WhatsApp (outbox) en la MISMA transacción: o se guardan la compra y su
         //    notificación pendiente, o no se guarda nada. El envío real ocurre después, en segundo
         //    plano, leyendo los datos de pago de la DB (ver paquete waha).
-        if (WahaConfigProvider.actual().servidorConfigurado()) {
+        if (GreenApiConfigProvider.actual().servidorConfigurado()) {
             WhatsappOutbox cola = new WhatsappOutbox();
             cola.idOrden = idOrden;
             cola.estado = WhatsappOutbox.PENDIENTE;
@@ -336,7 +335,7 @@ public class CompraRepository {
 
     private void notificarWhatsappSiAplica() {
         try {
-            if (WahaConfigProvider.actual().servidorConfigurado()) {
+            if (GreenApiConfigProvider.actual().servidorConfigurado()) {
                 WahaSyncScheduler.programarAhora(appContext);
             }
         } catch (RuntimeException ignorada) {

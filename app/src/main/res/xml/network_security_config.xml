@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Política de red de PRODUCCIÓN: solo HTTPS (se bloquea todo tráfico en claro) y solo las CA del
-  sistema. Para fijar el certificado de tu servidor WAHA (recomendado), agrega un <domain-config>:
+  sistema. Para fijar el certificado de tu servidor GREEN API (recomendado), agrega un <domain-config>:
 
   <domain-config>
       <domain includeSubdomains="false">waha.tu-dominio.com</domain>

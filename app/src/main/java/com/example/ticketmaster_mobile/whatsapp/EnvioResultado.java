@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /** Resultado clasificado de un intento de envío a WAHA. */
 public final class EnvioResultado {

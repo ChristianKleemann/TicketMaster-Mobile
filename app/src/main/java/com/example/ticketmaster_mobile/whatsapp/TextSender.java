@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 /** Abstracción del envío, para poder probar el procesador sin red. */
 public interface TextSender {

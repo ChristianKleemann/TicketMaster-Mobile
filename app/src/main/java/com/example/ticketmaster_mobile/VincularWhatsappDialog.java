@@ -12,10 +12,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.ticketmaster_mobile.data.AppDatabase;
 import com.example.ticketmaster_mobile.data.DatabaseExecutor;
-import com.example.ticketmaster_mobile.waha.TelefonoWhatsapp;
-import com.example.ticketmaster_mobile.waha.WahaClient;
-import com.example.ticketmaster_mobile.waha.WahaConfigProvider;
-import com.example.ticketmaster_mobile.waha.WahaSyncScheduler;
+import com.example.ticketmaster_mobile.whatsapp.TelefonoWhatsapp;
+import com.example.ticketmaster_mobile.whatsapp.WahaSyncScheduler;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -86,33 +84,9 @@ public final class VincularWhatsappDialog {
                 return;
             }
 
-            // 2) Comprobación con WAHA (conexión, clave, sesión y existencia del número)
+            // 2) Guardar el número (GREEN-API no verifica si el número tiene WhatsApp)
             btnGuardar.setEnabled(false);
-            pb.setVisibility(View.VISIBLE);
-            tvEstado.setVisibility(View.VISIBLE);
-            tvEstado.setText("Verificando el número con WhatsApp…");
-
-            DatabaseExecutor.runAsync(
-                    () -> new WahaClient(WahaConfigProvider.actual()).diagnosticar(num.digitos),
-                    dg -> {
-                        btnGuardar.setEnabled(true);
-                        pb.setVisibility(View.GONE);
-                        if (dg.esOk()) {
-                            // WAHA devuelve el chatId canónico del número (resuelve 52 vs 521)
-                            String chatId = dg.chatId != null ? dg.chatId : num.chatId;
-                            guardar(context, dialogo, idUsuario, chatId, true, alGuardar);
-                        } else if (dg.tipo == WahaClient.Diagnostico.Tipo.NUMERO_NO_EXISTE) {
-                            tvEstado.setVisibility(View.GONE);
-                            til.setError(dg.mensaje);        // el número no es de WhatsApp: no se guarda
-                        } else {
-                            // No se pudo verificar (WAHA apagado, sin red, clave...): se avisa y se
-                            // permite guardarlo con una segunda pulsación
-                            guardarSinVerificar[0] = true;
-                            btnGuardar.setText(R.string.whatsapp_guardar_igual);
-                            tvEstado.setText("⚠️ " + dg.mensaje
-                                    + "\nPuedes guardarlo igualmente; se enviará cuando WAHA esté disponible.");
-                        }
-                    });
+            guardar(context, dialogo, idUsuario, num.chatId, false, alGuardar);
         });
 
         if (btnDesvincular != null) {

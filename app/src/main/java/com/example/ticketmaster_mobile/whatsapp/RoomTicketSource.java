@@ -1,4 +1,4 @@
-package com.example.ticketmaster_mobile.waha;
+package com.example.ticketmaster_mobile.whatsapp;
 
 import com.example.ticketmaster_mobile.data.AppDatabase;
 import com.example.ticketmaster_mobile.data.FechaUtils;

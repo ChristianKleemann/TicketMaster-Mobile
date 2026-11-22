@@ -12,8 +12,8 @@ import com.example.ticketmaster_mobile.integration.soporte.EntornoRule;
 import com.example.ticketmaster_mobile.integration.soporte.Escenario;
 import com.example.ticketmaster_mobile.integration.soporte.Esperar;
 import com.example.ticketmaster_mobile.integration.soporte.Fechas;
-import com.example.ticketmaster_mobile.integration.soporte.FakeWahaServer.Peticion;
 import com.example.ticketmaster_mobile.integration.soporte.Json;
+import com.example.ticketmaster_mobile.integration.soporte.FakeGreenApiServer.Peticion;
 
 import org.junit.After;
 import org.junit.Rule;
@@ -73,15 +73,13 @@ public class UiAutomatorWhatsappE2ETest {
         assertTrue(Ua.texto("tvConfOrden").startsWith("Orden #"));
         assertEquals("Cantidad de boletos: 2", Ua.texto("tvConfCantidad"));
 
-        boolean llego = Esperar.hasta(ESPERA_ENVIO_MS, () -> entorno.waha.enviosAceptados().size() >= 1);
-        assertTrue("El Worker debe enviar el ticket a WAHA (¿el dispositivo tiene red?)", llego);
+        boolean llego = Esperar.hasta(ESPERA_ENVIO_MS, () -> entorno.green.enviosAceptados().size() >= 1);
+        assertTrue("El Worker debe enviar el ticket a Whatsapp (¿el dispositivo tiene red?)", llego);
 
-        List<Peticion> aceptadas = entorno.waha.enviosAceptados();
+        List<Peticion> aceptadas = entorno.green.enviosAceptados();
         assertEquals("Un solo mensaje por compra", 1, aceptadas.size());
         Peticion p = aceptadas.get(0);
-        assertEquals("/api/sendText", p.ruta);
-        assertEquals(EntornoRule.CHAT_ID_ESPERADO, Json.objeto(p.cuerpo).optString("chatId"));
-        assertEquals(EntornoRule.SESION, Json.objeto(p.cuerpo).optString("session"));
+        assertEquals("/sendMessage", p.ruta);
 
         String texto = Json.texto(p);
         int orden = entorno.esc.ultimaOrden();
@@ -99,12 +97,12 @@ public class UiAutomatorWhatsappE2ETest {
 
         // Esperar un poco más: no debe haber un segundo envío
         Esperar.hasta(5_000L, () -> false);
-        assertEquals(1, entorno.waha.enviosAceptados().size());
+        assertEquals(1, entorno.green.enviosAceptados().size());
     }
 
     @Test
     public void conWahaCaidoLaCompraDesdeLaPantallaSeCompletaYQuedaPendiente() {
-        entorno.waha.close();
+        entorno.green.close();
 
         comprarDosBoletosDeTeatroConTarjeta();
 
