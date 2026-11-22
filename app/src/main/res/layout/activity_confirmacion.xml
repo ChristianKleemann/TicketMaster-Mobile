@@ -99,7 +99,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/tm_blue"
+                        android:textColor="@color/tm_blue_text"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         tools:text="Monto pagado: $10,500.00" />

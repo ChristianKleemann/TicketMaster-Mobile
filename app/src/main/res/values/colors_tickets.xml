@@ -9,6 +9,6 @@
     <color name="seat_ocupado_bg">#2A2A2A</color>
 
     <color name="tm_card_background">#1E1E1E</color>
-    <color name="tm_success">#2E7D32</color>
+    <color name="tm_success">#66BB6A</color>
     <color name="tm_white">#FFFFFF</color>
 </resources>

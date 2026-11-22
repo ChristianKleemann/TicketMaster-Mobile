@@ -1,9 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.TicketMaster_Mobile" parent="Theme.Material3.DayNight.NoActionBar">
+
+    <!-- Tema oscuro único: es el aspecto de la app. Evita texto claro sobre fondo blanco en Login/Registro. -->
+    <style name="Theme.TicketMaster_Mobile" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/tm_blue</item>
         <item name="colorOnPrimary">@color/tm_text_primary</item>
+        <item name="colorSecondary">@color/tm_blue_text</item>
+        <item name="colorOnSecondary">@color/tm_background</item>
+        <item name="android:colorBackground">@color/tm_background</item>
+        <item name="colorSurface">@color/tm_surface</item>
+        <item name="colorOnSurface">@color/tm_text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/tm_text_secondary</item>
+        <item name="colorError">@color/tm_error</item>
+        <item name="colorOnError">@color/tm_background</item>
+        <item name="android:windowBackground">@color/tm_background</item>
         <item name="android:statusBarColor">@color/tm_background</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:navigationBarColor">@color/tm_background</item>
     </style>
 
     <style name="Widget.TicketMaster.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
@@ -23,5 +34,16 @@
         <item name="cornerRadius">8dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Botón de texto ("¿No tienes cuenta? Regístrate aquí"): texto azul claro, 7.63:1 -->
+    <style name="Widget.TicketMaster.TextButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/tm_blue_text</item>
+    </style>
+
+    <!-- Botón con borde (p. ej. "Generar CURP") -->
+    <style name="Widget.TicketMaster.OutlinedButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/tm_blue_text</item>
+        <item name="strokeColor">@color/tm_blue_text</item>
     </style>
 </resources>

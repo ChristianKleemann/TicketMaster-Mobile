@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Azul de marca: SOLO para rellenos (botones, bordes). Texto blanco encima: 4.98:1 -->
     <color name="tm_blue">#026CDF</color>
     <color name="tm_blue_dark">#014DA1</color>
     <color name="tm_blue_pressed">#013A7A</color>
+    <!-- Azul para TEXTO, enlaces e iconos sobre fondo oscuro: 7.63:1 sobre tm_background -->
+    <color name="tm_blue_text">#5AA9FF</color>
 
     <color name="tm_background">#121212</color>
     <color name="tm_surface">#1E1E1E</color>
 
     <color name="tm_text_primary">#FFFFFF</color>
     <color name="tm_text_secondary">#A0A0A0</color>
-    <color name="tm_text_hint">#6E6E6E</color>
+    <!-- Antes #6E6E6E (3.67:1). Ahora 5.79:1 sobre fondo y 5.15:1 sobre tarjeta -->
+    <color name="tm_text_hint">#8F8F8F</color>
 
-    <color name="tm_outline">#333333</color>
-    <color name="tm_error">#CF6679</color>
+    <!-- Divisores. No exigidos por WCAG; un poco más visibles -->
+    <color name="tm_outline">#444444</color>
+    <!-- Antes #CF6679. 6.69:1 sobre fondo, 5.95:1 sobre tarjeta -->
+    <color name="tm_error">#E57A8C</color>
 </resources>

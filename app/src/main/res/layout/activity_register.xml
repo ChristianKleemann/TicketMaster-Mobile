@@ -22,7 +22,7 @@
         <!-- Nombres y Apellidos -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilNombre1"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Primer Nombre"
@@ -36,7 +36,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilNombre2"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Segundo Nombre (Opcional)"
@@ -50,7 +50,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilApellido1"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Primer Apellido"
@@ -64,7 +64,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilApellido2"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Segundo Apellido"
@@ -84,7 +84,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAnio"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.TicketMaster.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -100,7 +100,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilMes"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.TicketMaster.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -116,7 +116,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilDia"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.TicketMaster.TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -134,7 +134,7 @@
         <!-- Sexo y Entidad -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilSexo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Sexo (H/M)"
@@ -149,7 +149,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilEntidad"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Entidad (ej. JALISCO)"
@@ -164,7 +164,7 @@
         <!-- Campo Usuario / CURP Extendido (20 Caracteres) -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilUsuario"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Usuario (CURP Extendido - 20 Caracteres)"
@@ -179,7 +179,7 @@
 
         <Button
             android:id="@+id/btnGenerarCurp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.TicketMaster.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Generar CURP en Usuario"
@@ -188,7 +188,7 @@
         <!-- Campo Contraseña con Botón para Visualizar -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.TicketMaster.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Contraseña (8 caracteres)"

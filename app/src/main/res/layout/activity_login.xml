@@ -17,7 +17,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilUsuario"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.TicketMaster.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Usuario (CURP Extendido - 20 Caracteres)"
@@ -33,7 +33,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.TicketMaster.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Contraseña"
@@ -58,7 +58,7 @@
     <!-- Botón / Enlace hacia la pantalla de Registro -->
     <Button
         android:id="@+id/btnGoToSignUp"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
+        style="@style/Widget.TicketMaster.TextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="¿No tienes cuenta? Regístrate aquí"

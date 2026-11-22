@@ -78,7 +78,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="Ver reglas de acceso y días festivos ▾"
-                android:textColor="@color/tm_blue"
+                android:textColor="@color/tm_blue_text"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
